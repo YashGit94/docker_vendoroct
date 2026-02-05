@@ -44,19 +44,19 @@ COPY . .
 # Build the Angular application for production
 RUN npm run build -- --configuration=production --base-href=/
 
-# Stage 2: Production Stage (Uses Nginx to serve static files)
+# ... (Stage 1 build remains the same)
+
+# Stage 2: Production Stage
 FROM nginx:alpine
 
 # Copy the custom Nginx configuration file
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 
-# Copy the built Angular files from the build stage
-# Note: Ensure the path matches your angular.json 'outputPath'
-COPY --from=BUILD /app/dist/vendoroct /usr/share/nginx/html 
+# Copy the built Angular files
+# Ensure 'vendoroct' matches the 'outputPath' in your angular.json
+COPY --from=BUILD /app/dist/vendoroct/browser /usr/share/nginx/html 
 
-# Cloud Run sets the PORT environment variable. Nginx typically uses 80.
-# We will use a script or environment substitution if needed, 
-# but often simply listening on 80 and mapping in Cloud Run works.
-EXPOSE 80
+# Inform Docker that the container listens on 8080
+EXPOSE 8080
 
 CMD ["nginx", "-g", "daemon off;"]
