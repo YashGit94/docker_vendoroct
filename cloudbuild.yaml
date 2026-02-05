@@ -25,6 +25,8 @@ steps:
       # Remove --allow-unauthenticated if IAM policy continues to fail
       # You can set this manually in the Cloud Run Console under 'Security'
       - '--allow-unauthenticated'
+options:
+  logging: CLOUD_LOGGING_ONLY
 
 images:
   - 'gcr.io/$PROJECT_ID/vendoroct-app'
