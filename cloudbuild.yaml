@@ -1,13 +1,13 @@
 steps:
   # Step 1: Build the Docker image
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['build', '-t', 'gcr.io/$PROJECT_ID/my-app', '.']
+    args: ['build', '-t', 'gcr.io/$PROJECT_ID/vendoroct-app', '.']
 
-  # Step 2: Push the image to Container Registry
+  # Step 2: Push the image
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['push', 'gcr.io/$PROJECT_ID/my-app']
+    args: ['push', 'gcr.io/$PROJECT_ID/vendoroct-app']
 
-  # Step 3: Deploy to Cloud Run
+  # Step 3: Deploy to Cloud Run with explicit port 8080
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
     entrypoint: gcloud
     args:
@@ -15,14 +15,16 @@ steps:
       - 'deploy'
       - 'vendoroct-service'
       - '--image'
-      - 'gcr.io/$PROJECT_ID/my-app'
+      - 'gcr.io/$PROJECT_ID/vendoroct-app'
       - '--region'
-      - 'us-central1' # Replace with your preferred region
+      - 'us-central1'
       - '--platform'
       - 'managed'
+      - '--port'
+      - '8080'
+      # Remove --allow-unauthenticated if IAM policy continues to fail
+      # You can set this manually in the Cloud Run Console under 'Security'
       - '--allow-unauthenticated'
 
 images:
-  - 'gcr.io/$PROJECT_ID/my-app'
-options:
-  logging: CLOUD_LOGGING_ONLY
+  - 'gcr.io/$PROJECT_ID/vendoroct-app'
