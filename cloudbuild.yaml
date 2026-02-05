@@ -24,7 +24,7 @@ steps:
       - '8080'
       # Remove --allow-unauthenticated if IAM policy continues to fail
       # You can set this manually in the Cloud Run Console under 'Security'
-      - '--allow-unauthenticated'
+      # - '--allow-unauthenticated'
 options:
   logging: CLOUD_LOGGING_ONLY
 
